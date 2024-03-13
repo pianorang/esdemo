@@ -90,7 +90,6 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
     public ClientConfiguration clientConfiguration() {
         ClientConfiguration clientConfiguration = ClientConfiguration.builder()
                 .connectedTo(elasticsearchProperties.getHosts().toArray(new String[0]))
-                .withPathPrefix("ela")
                 .withConnectTimeout(Duration.ofSeconds(5))
                 .withSocketTimeout(Duration.ofSeconds(3))
                 .build();
