@@ -1,4 +1,4 @@
-package me.pianorang.esdemo.ui.demo;
+package me.pianorang.esdemo.ui.api;
 
 public record SearchNlpRequest(
         String srchWord

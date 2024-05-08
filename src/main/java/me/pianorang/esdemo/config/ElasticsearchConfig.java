@@ -91,7 +91,7 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
         ClientConfiguration clientConfiguration = ClientConfiguration.builder()
                 .connectedTo(elasticsearchProperties.getHosts().toArray(new String[0]))
                 .withConnectTimeout(Duration.ofSeconds(5))
-                .withSocketTimeout(Duration.ofSeconds(3))
+                .withSocketTimeout(Duration.ofSeconds(10))
                 .build();
         return clientConfiguration;
     }

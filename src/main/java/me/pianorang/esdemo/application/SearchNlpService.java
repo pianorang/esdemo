@@ -3,11 +3,9 @@ package me.pianorang.esdemo.application;
 import co.elastic.clients.elasticsearch._types.KnnQuery;
 import co.elastic.clients.elasticsearch.core.search.FieldCollapse;
 import me.pianorang.esdemo.domain.vod.VodRepository;
-import me.pianorang.esdemo.ui.demo.SearchNlpRequest;
+import me.pianorang.esdemo.ui.api.SearchNlpRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.Query;
-import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,16 +24,16 @@ public class SearchNlpService {
                 .withKnnQuery(KnnQuery.of(q->{
                     return q.queryVectorBuilder(b->{
                         return b.textEmbedding(te->{
-                            te.modelId("jhgan__ko-sbert-sts");
+                            te.modelId("ddobokki__electra-small-nli-sts");
                             te.modelText(searchNlpRequest.srchWord());
                             return te;
                         });
                     })
-                    .field("refinedTitle_embedding")
+                    .field("synopsis_embedding")
                     .k(100)
                     .numCandidates(1000);
                 }))
-                .withFieldCollapse(FieldCollapse.of(c->c.field("seriesId")))
+                .withFieldCollapse(FieldCollapse.of(c->c.field("contsId")))
                 .build();
 
         //Query query = new StringQuery("{ \"match\": { \"title\": { \"query\": \""+searchNlpRequest.srchWord()+"\" } } } ");
