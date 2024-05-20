@@ -17,4 +17,5 @@ public class ElasticsearchProperties {
     private String caPath;
     private String username;
     private String password;
+    private String mlModelId;
 }

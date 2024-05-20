@@ -12,6 +12,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.elasticsearch.client.RestClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
 import org.springframework.util.ResourceUtils;
@@ -21,8 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 
+@Profile("es-client")
 @Configuration
-public class ElasticsearchConfig extends ElasticsearchConfiguration {
+public class ElasticsearchConfig {
     private final ElasticsearchProperties elasticsearchProperties;
 
 
@@ -30,7 +32,7 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
         this.elasticsearchProperties = elasticsearchProperties;
     }
 
-    //@Bean
+    @Bean
     ElasticsearchClient elasticsearchClient() throws IOException {
         return elasticsearchProperties.isSecure() ? getEsClientWithSSL() : getEsClient();
     }
@@ -86,13 +88,6 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
     }
 
 
-    @Override
-    public ClientConfiguration clientConfiguration() {
-        ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-                .connectedTo(elasticsearchProperties.getHosts().toArray(new String[0]))
-                .withConnectTimeout(Duration.ofSeconds(5))
-                .withSocketTimeout(Duration.ofSeconds(10))
-                .build();
-        return clientConfiguration;
-    }
+
 }
+

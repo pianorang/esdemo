@@ -7,5 +7,5 @@ import java.util.List;
 public interface VodRepository {
     public Vod findById(String id);
 
-    List<Vod> searchNlp(Query query);
+    List<Vod> searchNlp(String searchWord);
 }

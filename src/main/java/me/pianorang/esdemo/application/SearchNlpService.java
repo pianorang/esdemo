@@ -2,6 +2,7 @@ package me.pianorang.esdemo.application;
 
 import co.elastic.clients.elasticsearch._types.KnnQuery;
 import co.elastic.clients.elasticsearch.core.search.FieldCollapse;
+import me.pianorang.esdemo.config.ElasticsearchProperties;
 import me.pianorang.esdemo.domain.vod.VodRepository;
 import me.pianorang.esdemo.ui.api.SearchNlpRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -14,31 +15,15 @@ import java.util.stream.Collectors;
 @Service
 public class SearchNlpService {
     private final VodRepository vodRepository;
+    private final ElasticsearchProperties elasticsearchProperties;
 
-    public SearchNlpService(VodRepository vodRepository) {
+    public SearchNlpService(VodRepository vodRepository, ElasticsearchProperties elasticsearchProperties) {
         this.vodRepository = vodRepository;
+        this.elasticsearchProperties = elasticsearchProperties;
     }
 
     public List<SearchNlpDto> search(SearchNlpRequest searchNlpRequest) {
-        Query query = NativeQuery.builder()
-                .withKnnQuery(KnnQuery.of(q->{
-                    return q.queryVectorBuilder(b->{
-                        return b.textEmbedding(te->{
-                            te.modelId("ddobokki__electra-small-nli-sts");
-                            te.modelText(searchNlpRequest.srchWord());
-                            return te;
-                        });
-                    })
-                    .field("synopsis_embedding")
-                    .k(100)
-                    .numCandidates(1000);
-                }))
-                .withFieldCollapse(FieldCollapse.of(c->c.field("contsId")))
-                .build();
-
-        //Query query = new StringQuery("{ \"match\": { \"title\": { \"query\": \""+searchNlpRequest.srchWord()+"\" } } } ");
-
-        return vodRepository.searchNlp(query).stream()
+        return vodRepository.searchNlp(searchNlpRequest.srchWord()).stream()
                 .map(SearchNlpDto::of)
                 .collect(Collectors.toList());
 
